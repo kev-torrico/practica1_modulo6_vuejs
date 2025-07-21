@@ -1,9 +1,11 @@
 <template>
   <div class="table-container">
     <h2>Agenda de contactos</h2>
-    <router-link to="/agregarcontact">
-      <button class="btn-nuevo-contacto">Nuevo Contacto</button>
-    </router-link>
+
+    <button class="btn-nuevo-contacto" @click="goToNew()">
+      Nuevo Contacto
+    </button>
+
     <table class="user-table">
       <thead>
         <tr>
@@ -17,7 +19,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in items" :key="item.id">
+        <tr v-for="(item, index) in items" :key="item.id">
           <th scope="row">{{ item.id }}</th>
           <td>{{ item.name }}</td>
           <td>{{ item.email }}</td>
@@ -25,13 +27,57 @@
           <td>{{ item.phone }}</td>
           <td>{{ item.country }}</td>
           <td>{{ item.city }}</td>
+          <td>
+            <button
+              type="button"
+              class="btn-nuevo-contacto"
+              @click="abrirModal(index)"
+            >
+              Editar
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="modalContactoEditar"
+    tabindex="-1"
+    aria-labelledby="modalContactoEditarLabel"
+    aria-hidden="true"
+    ref="modalRef"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modalContactoEditarLabel">
+            Editar contacto
+          </h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <ContactoEditar
+            v-if="contactoSeleccionado"
+            :contacto="contactoSeleccionado"
+            @update="guardarEdicion"
+            @cancelar="cerrarModal"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import ContactoEditar from "@/components/ContactoEditor.vue";
 export default {
   name: "Contactos",
   data() {
@@ -84,9 +130,50 @@ export default {
           city: "Los Angeles",
         },
       ],
+      modalBootstrapInstance: null,
+      contactoSeleccionado: null,
+      indiceSeleccionado: 0,
     };
   },
-  components: {},
+  components: {
+    ContactoEditar,
+  },
+  mounted() {
+    this.$nextTick(() => {
+      if (this.$refs.modalRef) {
+        this.modalBootstrapInstance = new bootstrap.Modal(this.$refs.modalRef);
+      } else {
+        console.error("No se encontro el ref modalRef");
+      }
+    });
+  },
+  methods: {
+    goToNew() {
+      this.$router.push("/create");
+    },
+    abrirModal(index) {
+      this.contactoSeleccionado = null;
+      this.indiceSeleccionado = index;
+      setTimeout(() => {
+        if (this.modalBootstrapInstance) {
+          this.modalBootstrapInstance.show();
+          this.contactoSeleccionado = { ...this.items[index] };
+        } else {
+          console.error("modalBootstrapInstance no esta inicializado");
+        }
+      });
+    },
+    cerrarModal() {
+      if (this.modalBootstrapInstance) {
+        this.modalBootstrapInstance.hide();
+      }
+    },
+    guardarEdicion(contactoEditado) {
+      console.log("Contacto Editado", contactoEditado);
+      this.items[this.indiceSeleccionado] = contactoEditado;
+      this.cerrarModal();
+    },
+  },
 };
 </script>
 
