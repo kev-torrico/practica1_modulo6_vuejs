@@ -1,6 +1,9 @@
 <template>
   <div class="table-container">
     <h2>Agenda de contactos</h2>
+    <router-link to="/agregarcontact">
+      <button class="btn-nuevo-contacto">Nuevo Contacto</button>
+    </router-link>
     <table class="user-table">
       <thead>
         <tr>
@@ -117,5 +120,20 @@ export default {
 
 .user-table tr:nth-child(even) {
   background-color: #f2f2f2;
+}
+.btn-nuevo-contacto {
+  margin-bottom: 1rem;
+  background-color: #4caf50;
+  color: white;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn-nuevo-contacto:hover {
+  background-color: #45a049;
 }
 </style>

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import Contactos from "@/views/Contactos.vue";
+import AgregarContact from "@/views/AgregarContact.vue";
 
 const routes = [
   {
@@ -21,6 +22,11 @@ const routes = [
     path: "/contactos",
     name: "contactos",
     component: Contactos,
+  },
+  {
+    path: "/agregarcontact",
+    name: "agregarcontact",
+    component: AgregarContact,
   },
 ];
 
