@@ -35,6 +35,13 @@
             >
               Editar
             </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              @click="eliminar(index)"
+            >
+              Eliminar
+            </button>
           </td>
         </tr>
       </tbody>
@@ -172,6 +179,11 @@ export default {
       console.log("Contacto Editado", contactoEditado);
       this.items[this.indiceSeleccionado] = contactoEditado;
       this.cerrarModal();
+    },
+    eliminar(index) {
+      if (confirm("¿Estas seguro de eliminar este UTO?")) {
+        this.items.splice(index, 1);
+      }
     },
   },
 };
